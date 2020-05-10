@@ -16,10 +16,7 @@ import mozilla.appservices.places.BookmarkRoot
 import mozilla.components.support.ktx.android.content.getColorFromAttr
 import org.mozilla.fenix.R
 import org.mozilla.fenix.components.metrics.Event
-import org.mozilla.fenix.ext.nav
-import org.mozilla.fenix.ext.requireComponents
-import org.mozilla.fenix.ext.setToolbarColors
-import org.mozilla.fenix.ext.showToolbar
+import org.mozilla.fenix.ext.*
 
 /**
  * Displays buttons to navigate to library sections, such as bookmarks and history.

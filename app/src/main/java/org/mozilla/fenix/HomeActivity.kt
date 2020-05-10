@@ -141,13 +141,23 @@ open class HomeActivity : LocaleAwareAppCompatActivity() {
             }
         }
 
-        externalSourceIntentProcessors.any { it.process(intent, navHost.navController, this.intent) }
+        externalSourceIntentProcessors.any {
+            it.process(
+                intent,
+                navHost.navController,
+                this.intent
+            )
+        }
 
         Performance.processIntentIfPerformanceTest(intent, this)
 
         if (settings().isTelemetryEnabled) {
-            lifecycle.addObserver(BreadcrumbsRecorder(components.analytics.crashReporter,
-                navHost.navController, ::getBreadcrumbMessage))
+            lifecycle.addObserver(
+                BreadcrumbsRecorder(
+                    components.analytics.crashReporter,
+                    navHost.navController, ::getBreadcrumbMessage
+                )
+            )
 
             intent
                 ?.toSafeIntent()
@@ -173,7 +183,10 @@ open class HomeActivity : LocaleAwareAppCompatActivity() {
                 components.backgroundServices.accountManager.initAsync().await()
                 // If we're authenticated, kick-off a sync and a device state refresh.
                 components.backgroundServices.accountManager.authenticatedAccount()?.let {
-                    components.backgroundServices.accountManager.syncNowAsync(SyncReason.Startup, debounce = true)
+                    components.backgroundServices.accountManager.syncNowAsync(
+                        SyncReason.Startup,
+                        debounce = true
+                    )
                 }
             }
         }
@@ -197,7 +210,8 @@ open class HomeActivity : LocaleAwareAppCompatActivity() {
         super.onNewIntent(intent)
         intent ?: return
 
-        val intentProcessors = listOf(CrashReporterIntentProcessor()) + externalSourceIntentProcessors
+        val intentProcessors =
+            listOf(CrashReporterIntentProcessor()) + externalSourceIntentProcessors
         intentProcessors.any { it.process(intent, navHost.navController, this.intent) }
         browsingModeManager.mode = getModeFromIntentOrLastKnown(intent)
     }
@@ -228,7 +242,8 @@ open class HomeActivity : LocaleAwareAppCompatActivity() {
                     LayoutInflater.from(parentView.context).inflate(
                         R.layout.tab_tray_item,
                         parentView,
-                        false),
+                        false
+                    ),
                     tabsTray
                 )
             }
@@ -323,6 +338,16 @@ open class HomeActivity : LocaleAwareAppCompatActivity() {
                 onBackPressed()
             }
 
+            isToolbarInflated = true
+        }
+        return supportActionBar!!
+    }
+
+    fun getSupportActionBarWithoutBackButton(): ActionBar {
+        if (!isToolbarInflated) {
+            val navigationToolbar = navigationToolbarStub.inflate() as Toolbar
+            setSupportActionBar(navigationToolbar)
+            supportActionBar!!.setDisplayHomeAsUpEnabled(false)
             isToolbarInflated = true
         }
         return supportActionBar!!

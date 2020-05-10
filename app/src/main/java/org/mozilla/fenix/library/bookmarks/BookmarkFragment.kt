@@ -40,12 +40,7 @@ import org.mozilla.fenix.R
 import org.mozilla.fenix.components.FenixSnackbar
 import org.mozilla.fenix.components.StoreProvider
 import org.mozilla.fenix.components.metrics.Event
-import org.mozilla.fenix.ext.bookmarkStorage
-import org.mozilla.fenix.ext.components
-import org.mozilla.fenix.ext.minus
-import org.mozilla.fenix.ext.nav
-import org.mozilla.fenix.ext.requireComponents
-import org.mozilla.fenix.ext.toShortUrl
+import org.mozilla.fenix.ext.*
 import org.mozilla.fenix.library.LibraryPageFragment
 import org.mozilla.fenix.utils.allowUndo
 
@@ -134,8 +129,10 @@ class BookmarkFragment : LibraryPageFragment<BookmarkNode>(), UserInteractionHan
 
     override fun onResume() {
         super.onResume()
+        showToolbar(getString(R.string.library_history))
 
         (activity as HomeActivity).getSupportActionBarAndInflateIfNecessary().show()
+
         val currentGuid = BookmarkFragmentArgs.fromBundle(requireArguments()).currentRoot.ifEmpty {
             BookmarkRoot.Mobile.id
         }
@@ -187,6 +184,13 @@ class BookmarkFragment : LibraryPageFragment<BookmarkNode>(), UserInteractionHan
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.close_bookmark_folder -> {
+                nav(
+                    R.id.bookmarkFragment,
+                    BookmarkFragmentDirections.actionGlobalHome()
+                )
+                true
+            }
             R.id.add_bookmark_folder -> {
                 navigate(
                     BookmarkFragmentDirections

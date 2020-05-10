@@ -35,11 +35,7 @@ import org.mozilla.fenix.components.FenixSnackbar
 import org.mozilla.fenix.components.StoreProvider
 import org.mozilla.fenix.components.history.createSynchronousPagedHistoryProvider
 import org.mozilla.fenix.components.metrics.Event
-import org.mozilla.fenix.ext.components
-import org.mozilla.fenix.ext.nav
-import org.mozilla.fenix.ext.requireComponents
-import org.mozilla.fenix.ext.showToolbar
-import org.mozilla.fenix.ext.toShortUrl
+import org.mozilla.fenix.ext.*
 import org.mozilla.fenix.library.LibraryPageFragment
 
 @SuppressWarnings("TooManyFunctions", "LargeClass")
@@ -137,12 +133,12 @@ class HistoryFragment : LibraryPageFragment<HistoryItem>(), UserInteractionHandl
 
     override fun onResume() {
         super.onResume()
-        showToolbar(getString(R.string.library_history))
+        showToolbarWithoutBack(getString(R.string.library_history))
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         val menuRes = when (historyStore.state.mode) {
-            HistoryFragmentState.Mode.Normal -> R.menu.library_menu
+            HistoryFragmentState.Mode.Normal -> R.menu.history_menu
             is HistoryFragmentState.Mode.Editing -> R.menu.history_select_multi
             else -> return
         }
@@ -152,6 +148,13 @@ class HistoryFragment : LibraryPageFragment<HistoryItem>(), UserInteractionHandl
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.close_history_tab -> {
+            nav(
+                R.id.historyFragment,
+                HistoryFragmentDirections.actionGlobalHome()
+            )
+            true
+        }
         R.id.share_history_multi_select -> {
             val selectedHistory = historyStore.state.mode.selectedItems
             val shareTabs = selectedHistory.map { ShareData(url = it.url, title = it.title) }

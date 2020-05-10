@@ -45,6 +45,16 @@ fun Fragment.showToolbar(title: String) {
 }
 
 /**
+ * Displays the activity toolbar with the given [title] but without BackButton.
+ * Throws if the fragment is not attached to an [AppCompatActivity].
+ */
+fun Fragment.showToolbarWithoutBack(title: String) {
+    (requireActivity() as AppCompatActivity).title = title
+    (activity as HomeActivity).getSupportActionBarWithoutBackButton().show()
+}
+
+
+/**
  * Hides the activity toolbar.
  * Throws if the fragment is not attached to an [AppCompatActivity].
  */
